@@ -5,7 +5,6 @@
 * Python
 * Apache Airflow
 * Apache Spark
-* Python
 * Google Cloud Storage
 * Google BigQuery
 * Google Dataproc
