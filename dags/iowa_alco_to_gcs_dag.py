@@ -26,8 +26,8 @@ CODE_DIRECTORY = f"{AIRFLOW_HOME}/code"
 
 # Small dataset (2019)
 # IOWA_LIQUOR_FILE_URL = "https://data.iowa.gov/api/views/38x4-vs5h/rows.csv\?accessType\=DOWNLOAD"
-IOWA_LIQUOR_FILE_URL = "https://data.iowa.gov/api/views/m3tr-qhgy/rows.csv\?accessType\=DOWNLOAD"
 # Full dataset (2012-2023)
+IOWA_LIQUOR_FILE_URL = "https://data.iowa.gov/api/views/m3tr-qhgy/rows.csv\?accessType\=DOWNLOAD"
 IOWA_LIQUOR_FILE_NAME = "iowa_liquor"
 
 IOWA_POPULATION_FILE_URL = "https://data.iowa.gov/api/views/y8va-rhk9/rows.csv?accessType=DOWNLOAD"
