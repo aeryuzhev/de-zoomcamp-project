@@ -1,1 +1,5 @@
 __pycache__/
+logs/
+data/
+sql/
+peer_review_criteria.md
