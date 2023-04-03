@@ -29,13 +29,33 @@ LIQUOR_SCHEMA = pa.schema(
     ]
 )
 
-POPULATION_SCHEMA = pa.schema(
+CITY_COUNTY_POPULATION_SCHEMA = pa.schema(
     [
         ("fips", pa.int64()),
         ("county", pa.string()),
         ("city", pa.string()),
         ("year", pa.int64()),
-        ("estimate", pa.int64()),
+        ("population", pa.int64()),
+        ("primary_point", pa.string()), 
+    ]
+)
+
+CITY_POPULATION_SCHEMA = pa.schema(
+    [
+        ("fips", pa.int64()),
+        ("city", pa.string()),
+        ("year", pa.int64()),
+        ("population", pa.int64()),
+        ("primary_point", pa.string()), 
+    ]
+)
+
+COUNTY_POPULATION_SCHEMA = pa.schema(
+    [
+        ("fips", pa.int64()),
+        ("county", pa.string()),
+        ("year", pa.int64()),
+        ("population", pa.int64()),
         ("primary_point", pa.string()), 
     ]
 )
