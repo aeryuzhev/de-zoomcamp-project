@@ -5,8 +5,8 @@ from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.types import StringType
 
-GCS_TEMP_BUCKET = "dataproc-temp-europe-west6-137758434175-6xhdlckq"
-GCS_IOWA_LIQUOR_FILE = "gs://dtc_data_lake_de-zoomcamp-375618/iowa_liquor/iowa_liquor.parquet"
+GCS_TEMP_BUCKET = "dtc_data_lake_de-zoomcamp-375618" 
+GCS_IOWA_LIQUOR_FILE = f"gs://{GCS_TEMP_BUCKET}/iowa_liquor/fact_liquor_sale.parquet"
 BQ_LIQUOR_SALE_TABLE = "iowa_liquor.fact_liquor_sale"
 
 map_county_dict = {
@@ -119,7 +119,10 @@ df_transformed = (
 
 df_transformed.write \
     .format("bigquery") \
+    .mode("overwrite") \
     .option("temporaryGcsBucket", GCS_TEMP_BUCKET) \
     .option("table", BQ_LIQUOR_SALE_TABLE) \
-    .mode("Overwrite") \
+    .option("partitionField", "sale_date") \
+    .option("partitionType", "MONTH") \
+    .option("clusteredFields", "county,city") \
     .save()
