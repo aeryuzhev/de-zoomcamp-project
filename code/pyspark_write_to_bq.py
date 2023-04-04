@@ -102,7 +102,11 @@ def udf_init_cap(value):
     return value
 
 
-df_cleaned = df.filter((F.col("city") != "") & (F.col("county") != ""))
+df_cleaned = df.filter(
+    (F.col("city") != "") & 
+    (F.col("county") != "") & 
+    (F.col("county") != "EL PASO")
+)
 
 df_mapped = (
     df_cleaned
@@ -115,6 +119,11 @@ df_transformed = (
     df_mapped
     .withColumn("county", udf_init_cap(F.col("county")))
     .withColumn("city", udf_init_cap(F.col("city")))
+    .withColumn("store_name", udf_init_cap(F.col("store_name")))
+    .withColumn("address", udf_init_cap(F.col("address")))
+    .withColumn("category_name", udf_init_cap(F.col("category_name")))
+    .withColumn("vendor_name", udf_init_cap(F.col("vendor_name")))
+    .withColumn("item_description", udf_init_cap(F.col("item_description")))
 )
 
 df_transformed.write \
@@ -124,5 +133,7 @@ df_transformed.write \
     .option("table", BQ_LIQUOR_SALE_TABLE) \
     .option("partitionField", "sale_date") \
     .option("partitionType", "MONTH") \
-    .option("clusteredFields", "county,city") \
+    .option("clusteredFields", "county,city,category_name") \
     .save()
+
+
