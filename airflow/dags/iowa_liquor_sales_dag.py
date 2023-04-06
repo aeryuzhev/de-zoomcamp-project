@@ -66,12 +66,12 @@ with DAG(
     )
     
     download_county_population_file_task = BashOperator(
-        task_id="download_county_population_file_task",
+        task_id="download_county_population_file",
         bash_command=f"curl -o {DATA_DIRECTORY}/{COUNTY_POPULATION_NAME}.csv {SOURCE_FILE_URLS[COUNTY_POPULATION_NAME]}",
     )
     
     transform_county_population_csv_task = PythonOperator(
-        task_id="transform_county_population_csv_task",
+        task_id="transform_county_population_csv",
         python_callable=transform_population_csv,
         op_kwargs={"file_name": COUNTY_POPULATION_NAME}
     )
