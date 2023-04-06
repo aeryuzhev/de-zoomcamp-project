@@ -105,7 +105,7 @@ with DAG(
     upload_code_to_gcs_task = LocalFilesystemToGCSOperator(
         task_id="upload_code_to_gcs",
         src=CODE_TO_GCS_LIST,
-        dst=f"{GCS_BUCKET_PATH}/code/",
+        dst=f"{GCS_BUCKET_PATH}/scripts/",
         bucket=GCS_BUCKET,
     )    
    
