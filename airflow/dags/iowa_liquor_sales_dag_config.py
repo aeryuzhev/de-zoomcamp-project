@@ -4,7 +4,7 @@ import pyarrow as pa
 
 AIRFLOW_HOME = os.getenv("AIRFLOW_HOME")
 DATA_DIRECTORY = f"{AIRFLOW_HOME}/data"
-CODE_DIRECTORY = f"{AIRFLOW_HOME}/code"
+CODE_DIRECTORY = f"{AIRFLOW_HOME}/scripts"
 
 LIQUOR_SALE_NAME = "fact_liquor_sale"
 COUNTY_POPULATION_NAME = "dim_county_population"
@@ -25,18 +25,18 @@ BQ_DATASET = "iowa_liquor"
 GCP_REGION = "europe-west6"
 GCP_PROJECT_ID = "de-zoomcamp-375618"
 
-PYSPARK_URI = f"gs://{GCS_BUCKET}/{GCS_BUCKET_PATH}/code/pyspark_write_to_bq.py"
+PYSPARK_URI = f"gs://{GCS_BUCKET}/{GCS_BUCKET_PATH}/scripts/pyspark_write_to_bq.py"
 DATAPROC_CLUSTER = "de-zoomcamp-cluster"
 DATAPROC_CLUSTER_CONFIG = {
     "master_config": {
         "num_instances": 1,
         "machine_type_uri": "n1-standard-2",
-        "disk_config": {"boot_disk_type": "pd-standard", "boot_disk_size_gb": 512},
+        "disk_config": {"boot_disk_type": "pd-standard", "boot_disk_size_gb": 64},
     },
     "worker_config": {
         "num_instances": 2,
         "machine_type_uri": "n1-standard-2",
-        "disk_config": {"boot_disk_type": "pd-standard", "boot_disk_size_gb": 512},
+        "disk_config": {"boot_disk_type": "pd-standard", "boot_disk_size_gb": 64},
     },
 }
 PYSPARK_JOB = {

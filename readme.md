@@ -34,14 +34,12 @@
 4. Enable Google Compute Engine API for your project [in the GCP console](https://console.developers.google.com/apis/library/compute.googleapis.com).
 
 5. [Create a service account key](https://console.cloud.google.com/apis/credentials/serviceaccountkey) with the following settings:
-   - Select the project you created in the previous step.
    - Click "Create Service Account".
-   - Give it any name you like and click "Create".
+   - Give it any name you like and click "Create and continue".
    - For the Role, choose "Project -> Editor", then click "Continue".
    - Skip granting additional users access, and click "Done".
 
 6. After you create your service account, download your service account key.
-
    - Select your service account from the list.
    - Select the "Keys" tab.
    - In the drop down menu, select "Create new key".
@@ -62,7 +60,7 @@
    - Click the SSH keys tab.
    - Click Edit.
    - Click Add item. A text box opens.
-   - Copy the contents of your public SSH key (```~/.ssh/<KEY_FILENAME>```).
+   - Copy the contents of your public SSH key (```~/.ssh/<KEY_FILENAME>.pub```).
    - Paste the contents in the text box (```ssh-rsa AAAAB3NzaC1yc2 ... UdMvQMCk= <USERNAME>```).
    - Click "Save"
 
@@ -75,14 +73,12 @@
      - **Series**: E2
      - **Machine type**: e2-standart-2 (2 vCPU, 8 GB memory)
    - **Boot disk**:
-         - **Operating system**: Ubuntu
-         - **Version**: Ubuntu 18.04 LTS
-         - **Size** (GB): 20 GB
+     - **Operating system**: Ubuntu
+     - **Version**: Ubuntu 18.04 LTS
+     - **Size** (GB): 20 GB
    - **Service account**: Choose the service account which was created in section 5
 
-10. [Start your VM](https://console.cloud.google.com/compute/instances) and copy External IP.
-
-11. Create or update an existing ssh configuration file:
+10. Copy an External IP of this VM and create or update an existing ssh configuration file:
 
     - HOST: the name of the host (you will use this name wnen connecting to the VM using ssh or sftp commands)
     - EXTERNAL_IP: external IP from GCP VM instances
@@ -101,23 +97,14 @@
       ' >> ~/.ssh/config     
       ```
 
-12. Copy your GCP service account key file to the VM using sftp.
+11. Copy your GCP service account key file to the VM using sftp.
       - HOST: the name of the host from ```~/.ssh/config```
 
       ```bash
       sftp <HOST>
       ```
 
-      ```bash
-      mkdir -p .google/credentials/
-      ```
-
-      ```bash
-      cd .google/credentials/
-
-      ```
-
-      - GCP_SERVICE_ACCOUNT_KEY: a path to a key file which you have downloaded and renamed to "google_credentials.json" wnen creating a GCP service account in section 6
+      - GCP_SERVICE_ACCOUNT_KEY: a full path to a key file which you have downloaded and renamed to "google_credentials.json" wnen creating a GCP service account in section 6
 
       ```bash
       put <GCP_SERVICE_ACCOUNT_KEY>
@@ -127,29 +114,32 @@
       exit
       ```
 
-13. Connect to the VM using ssh.
+12. Connect to the VM using ssh.
       - HOST: the name of the host from ```~/.ssh/config```
 
       ```bash
       ssh <HOST>
       ```
 
-14. Provide your service account credentials to Google Application Default Credentials.
+13. Provide your service account credentials to Google Application Default Credentials.
 
       ```bash
+      mkdir -p ~/.google/credentials/
+      mv google_credentials.json ~/.google/credentials/
+
       echo 'export GOOGLE_APPLICATION_CREDENTIALS="~/.google/credentials/google_credentials.json"' >> ~/.bashrc
       source ~/.bashrc
       gcloud auth application-default login 
       ```
 
-15. Update, upgrade and install packages.
+14. Update, upgrade and install packages.
 
       ```bash
       sudo apt update && sudo apt upgrade
       sudo apt install wget gnome-keyring ca-certificates curl gnupg
       ```
 
-16. [Install Terraform](https://developer.hashicorp.com/terraform/downloads).
+15. [Install Terraform](https://developer.hashicorp.com/terraform/downloads).
 
       ```bash
       wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
@@ -157,7 +147,7 @@
       sudo apt update && sudo apt install terraform
       ```
 
-17. [Install Docker](https://docs.docker.com/engine/install/ubuntu/).
+16. [Install Docker](https://docs.docker.com/engine/install/ubuntu/).
 
       ```bash
       sudo mkdir -m 0755 -p /etc/apt/keyrings
@@ -174,7 +164,7 @@
       sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
       ```
 
-18. [Install docker-compose](https://github.com/docker/compose#where-to-get-docker-compose).
+17. [Install docker-compose](https://github.com/docker/compose#where-to-get-docker-compose).
 
       ```bash
       mkdir -p "${HOME}/.docker/cli-plugins" && cd "${HOME}/.docker/cli-plugins"
@@ -184,7 +174,7 @@
       source ~/.bashrc
       ```
 
-19. [Linux post-installation steps for Docker](https://docs.docker.com/engine/install/linux-postinstall/).
+18. [Linux post-installation steps for Docker](https://docs.docker.com/engine/install/linux-postinstall/).
 
       ```bash
       sudo groupadd docker
@@ -203,18 +193,17 @@
       sudo service docker restart
       ```
 
-20. Clone the repo and run some initial commands.
+19. Clone the repo and run some initial commands.
 
       ```bash
       git clone https://github.com/aeryuzhev/de-zoomcamp-project.git
-      cd de-zoomcamp-project
+      cd de-zoomcamp-project/airflow
       echo -e "AIRFLOW_UID=$(id -u)" > .env
       mkdir -p data plugins logs
       ```
 
-21. Run Airflow in Docker.
+20. Run Airflow in Docker.
 
       ```bash
-      docker-compose build
       docker-compose up -d
       ```
