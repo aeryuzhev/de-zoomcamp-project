@@ -18,7 +18,6 @@ from airflow.models.baseoperator import chain
 from pyarrow import csv as pv
 from pyarrow import parquet as pq
 import pandas as pd
-from holidays import country_holidays
 
 from iowa_liquor_sales_dag_config import *
 

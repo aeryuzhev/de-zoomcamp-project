@@ -114,11 +114,11 @@
       exit
       ```
 
-12. Connect to the VM using ssh.
+12. Connect to the VM using ssh (with 8080 port forwarding).
       - HOST: the name of the host from ```~/.ssh/config```
 
       ```bash
-      ssh <HOST>
+      ssh -L 8080:localhost:8080 <HOST>
       ```
 
 13. Provide your service account credentials to Google Application Default Credentials.
@@ -186,7 +186,7 @@
       ```
 
       ```bash
-      ssh <HOST>
+      ssh -L 8080:localhost:8080 <HOST>
       ```
 
       ```bash
