@@ -194,27 +194,43 @@
       sudo service docker restart
       ```
 
-19. Clone the repo and run some initial commands.
+19. Clone the repo and add your user ID into the .env.
 
       ```bash
       git clone https://github.com/aeryuzhev/de-zoomcamp-project.git
       cd de-zoomcamp-project/airflow
-      echo -e "AIRFLOW_UID=$(id -u)" > .env
-      mkdir -p data plugins logs
+      echo -e "AIRFLOW_UID=$(id -u)" >> .env
       ```
 
-20. Create GCP resources (GCS bucket and BigQuery dataset) using Terraform.
+20. Open **.env** file and write [your GCP project ID](https://console.cloud.google.com/cloud-resource-manager) and GCP region (AIRFLOW_UID may be different).
+
+      ```bash
+      GCP_PROJECT_ID = <GCP_PROJECT_ID> # "iowa-project"
+      GCP_REGION = <GCP_REGION> # "europe-west6"
+      AIRFLOW_UID=1000
+      ```
+
+21. Create GCP resources (GCS bucket and BigQuery dataset) using Terraform.
+      - GCP_PROJECT_ID: [your GCP project ID](https://console.cloud.google.com/cloud-resource-manager).
 
       ```bash
       cd ~/de-zoomcamp-project/terraform
-      terraform apply
+      terraform init
       ```
 
-21. Run Airflow in Docker.
+      ```bash
+      terraform plan -var="project=<GCP_PROJECT_ID>"
+      ```
+
+      ```bash
+      terraform apply -var="project=<GCP_PROJECT_ID>"
+      ```
+
+22. Run Airflow in Docker.
 
       ```bash
       cd ~/de-zoomcamp-project/airflow
       docker-compose up -d
       ```
 
-22. Open Airflow UI ```localhost:8080``` in your browser, start the **iowa_liquor_sales_dag** and wait until it finishes (~30 min). After that you can build your own dashboard based on the data in your BigQuery dataset.
+23. Open Airflow UI ```localhost:8080``` in your browser, start the **iowa_liquor_sales_dag** and wait until it finishes. It runs for about 30 min, because it downloads a ~6gb csv file. When it finishes you'll be able to build your own dashboard based on data from BigQuery dataset.

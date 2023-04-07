@@ -3,7 +3,7 @@ locals {
 }
 
 variable "project" {
-  default = "de-zoomcamp-375618"
+  default = "de-zoomcamp"
 }
 
 variable "region" {
@@ -11,10 +11,10 @@ variable "region" {
   type    = string
 }
 
-variable "zone" {
-  default = "europe-west6-a"
-  type    = string
-}
+# variable "zone" {
+#   default = "europe-west6-a"
+#   type    = string
+# }
 
 variable "storage_class" {
   default = "STANDARD"
