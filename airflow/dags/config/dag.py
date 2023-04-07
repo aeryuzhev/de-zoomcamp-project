@@ -1,6 +1,10 @@
 import os
 
-from gcp import GCP_PROJECT_ID, GCS_BUCKET, GCS_BUCKET_PATH
+# GCP configuration.
+GCP_PROJECT_ID = "iowa-project-2023"
+GCP_REGION = "europe-west6"
+GCS_BUCKET = f"{GCP_PROJECT_ID}_data_lake"
+GCS_BUCKET_PATH = "iowa_liquor"
 
 # Airflow pathes for data and scripts.
 AIRFLOW_HOME = os.getenv("AIRFLOW_HOME")

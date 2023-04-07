@@ -8,7 +8,7 @@ from pyspark.sql.types import StringType
 
 GCP_PROJECT_ID = sys.argv[1]
 
-GCS_BUCKET = GCP_PROJECT_ID + "data_lake"
+GCS_BUCKET = f"{GCP_PROJECT_ID}_data_lake"
 GCS_IOWA_LIQUOR_FILE = f"gs://{GCS_BUCKET}/iowa_liquor/fact_liquor_sale.parquet"
 BQ_LIQUOR_SALE_TABLE = "iowa_liquor.fact_liquor_sale"
 

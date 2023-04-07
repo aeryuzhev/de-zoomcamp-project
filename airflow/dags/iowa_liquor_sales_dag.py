@@ -19,10 +19,9 @@ from pyarrow import csv as pv
 from pyarrow import parquet as pq
 import pandas as pd
 
-from config.gcp import *
+from config.dag import *
 from config.schemas import *
 from config.sql import *
-from config.dag import *
 
 
 def convert_csv_to_parquet(file_name, schema, timestamp_parsers):

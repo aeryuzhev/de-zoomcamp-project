@@ -3,7 +3,7 @@ locals {
 }
 
 variable "project" {
-  default = "de-zoomcamp"
+  default = "iowa-project-2023"
 }
 
 variable "region" {

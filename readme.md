@@ -31,15 +31,17 @@
 
 3. Make sure that you have selected this new project.
 
-4. Enable Google Compute Engine API for your project [in the GCP console](https://console.developers.google.com/apis/library/compute.googleapis.com).
+4. [Enable Google Compute Engine API](https://console.developers.google.com/apis/library/compute.googleapis.com) for your project in the GCP console.
 
-5. [Create a service account key](https://console.cloud.google.com/apis/credentials/serviceaccountkey) with the following settings:
+5. [Enable Cloud Dataproc API](https://console.cloud.google.com/marketplace/product/google/dataproc.googleapis.com) for your project in the GCP console.
+
+6. [Create a service account key](https://console.cloud.google.com/apis/credentials/serviceaccountkey) with the following settings:
    - Click "Create Service Account".
    - Give it any name you like and click "Create and continue".
    - For the Role, choose "Project -> Editor", then click "Continue".
    - Skip granting additional users access, and click "Done".
 
-6. After you create your service account, download your service account key.
+7. After you create your service account, download your service account key.
    - Select your service account from the list.
    - Select the "Keys" tab.
    - In the drop down menu, select "Create new key".
@@ -47,7 +49,7 @@
    - Click "Create" to create the key and save the key file to your system.
    - Rename this key file to **google_credentials.json**
 
-7. [Create an SSH key pair](https://cloud.google.com/compute/docs/connect/create-ssh-keys#create_an_ssh_key_pair) (if you haven't created it already).
+8. [Create an SSH key pair](https://cloud.google.com/compute/docs/connect/create-ssh-keys#create_an_ssh_key_pair) (if you haven't created it already).
    - KEY_FILENAME: the name for your SSH key file.
    - USERNAME: your username on the VM.
 
@@ -55,7 +57,7 @@
       ssh-keygen -t rsa -f ~/.ssh/<KEY_FILENAME> -C <USERNAME> -b 2048
       ```
 
-8. [Add SSH keys to project metadata](https://cloud.google.com/compute/docs/connect/add-ssh-keys#add_ssh_keys_to_project_metadata).
+9. [Add SSH keys to project metadata](https://cloud.google.com/compute/docs/connect/add-ssh-keys#add_ssh_keys_to_project_metadata).
    - In the Google Cloud console, go to the [Metadata](https://console.cloud.google.com/compute/metadata/sshKeys?_ga=2.84082073.1017998736.1680528409-313645582.1673880440) page.
    - Click the SSH keys tab.
    - Click Edit.
@@ -64,7 +66,7 @@
    - Paste the contents in the text box (```ssh-rsa AAAAB3NzaC1yc2 ... UdMvQMCk= <USERNAME>```).
    - Click "Save"
 
-9. [Create a GCP VM instance](https://console.cloud.google.com/compute/instancesAdd) with the following parameters.
+10. [Create a GCP VM instance](https://console.cloud.google.com/compute/instancesAdd) with the following parameters.
 
    - **Name**: Instance name.
    - **Region**: europe-west6 (or choose another region)
@@ -78,9 +80,9 @@
      - **Size** (GB): 20 GB
    - **Service account**: Choose the service account which was created in section 5
 
-10. Copy an External IP of this VM and create or update an existing ssh configuration file:
+11. Copy an External IP of this VM and create or update an existing ssh configuration file ```~/.ssh/config```:
 
-    - REMOTE_HOST: the name of the remote host (you will use this name wnen connecting to the VM using ssh or sftp commands)
+    - REMOTE_HOST: the name of the VM (you will use this name wnen connecting to the VM using ssh or sftp commands)
     - EXTERNAL_IP: external IP from GCP VM instances
     - KEY_FILENAME: the name for your SSH key file.
     - USERNAME: your username on the VM.
@@ -107,8 +109,8 @@
             LocalForward 8080 localhost:8080 # Airflow UI
       ```
 
-11. Copy your GCP service account key file to the remote machine using scp.
-      - REMOTE_HOST: the name of the remote host from ```~/.ssh/config```
+12. Copy your GCP service account key file to the VM using scp.
+      - REMOTE_HOST: the name of the VM from ```~/.ssh/config```
       - GCP_SERVICE_ACCOUNT_KEY: a full path to a key file which you have downloaded and renamed to "google_credentials.json" wnen creating a GCP service account in section 6. In my case it was saved to ```/home/aerik/downloads/google_credentials.json``` and the command should be ```scp -r ~/downloads/google_credentials.json iowa-instance:~/.google/credentials/google_credentials.json```.
 
       ```bash
@@ -116,14 +118,14 @@
       scp -r <GCP_SERVICE_ACCOUNT_KEY> <REMOTE_HOST>:~/.google/credentials/google_credentials.json
       ```
 
-12. Connect to the VM using ssh.
-      - REMOTE_HOST: the name of the host from ```~/.ssh/config```
+13. Connect to the VM using ssh.
+      - REMOTE_HOST: the name of the VM from ```~/.ssh/config```
 
       ```bash
       ssh <REMOTE_HOST>
       ```
 
-13. Provide your service account credentials to Google Application Default Credentials.
+14. Provide your service account credentials to Google Application Default Credentials.
 
       ```bash
       echo 'export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/.google/credentials/google_credentials.json"' >> ~/.bashrc
@@ -131,14 +133,14 @@
       gcloud auth application-default login 
       ```
 
-14. Update, upgrade and install packages.
+15. Update, upgrade and install packages.
 
       ```bash
       sudo apt update && sudo apt upgrade
       sudo apt install wget gnome-keyring ca-certificates curl gnupg
       ```
 
-15. [Install Terraform](https://developer.hashicorp.com/terraform/downloads).
+16. [Install Terraform](https://developer.hashicorp.com/terraform/downloads).
 
       ```bash
       wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
@@ -146,7 +148,7 @@
       sudo apt update && sudo apt install terraform
       ```
 
-16. [Install Docker](https://docs.docker.com/engine/install/ubuntu/).
+17. [Install Docker](https://docs.docker.com/engine/install/ubuntu/).
 
       ```bash
       sudo mkdir -m 0755 -p /etc/apt/keyrings
@@ -163,7 +165,7 @@
       sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
       ```
 
-17. [Install docker-compose](https://github.com/docker/compose#where-to-get-docker-compose).
+18. [Install docker-compose](https://github.com/docker/compose#where-to-get-docker-compose).
 
       ```bash
       mkdir -p "${HOME}/.docker/cli-plugins" && cd "${HOME}/.docker/cli-plugins"
@@ -173,7 +175,7 @@
       source ~/.bashrc
       ```
 
-18. [Linux post-installation steps for Docker](https://docs.docker.com/engine/install/linux-postinstall/).
+19. [Linux post-installation steps for Docker](https://docs.docker.com/engine/install/linux-postinstall/).
 
       ```bash
       sudo groupadd docker
@@ -192,7 +194,7 @@
       sudo service docker restart
       ```
 
-19. Clone the repo and add your user ID into the .env.
+20. Clone the repo and add your user ID into the .env.
 
       ```bash
       cd ~
@@ -201,42 +203,44 @@
       echo -e "AIRFLOW_UID=$(id -u)" > .env
       ```
 
-20. Open **~/de-zoomcamp-project/airflow/dags/config/gcp.py** file and write GCP_PROJECT_ID and GCP_REGION. [Here you can take your GCP project ID](https://console.cloud.google.com/cloud-resource-manager)
+21. Open **~/de-zoomcamp-project/airflow/dags/config/dag.py** and write your GCP_PROJECT_ID and GCP_REGION. [Here you can take your GCP project ID](https://console.cloud.google.com/cloud-resource-manager)
 
       ```bash
-      nano ~/de-zoomcamp-project/airflow/dags/config/gcp.py
+      nano ~/de-zoomcamp-project/airflow/dags/config/dag.py
       ```
 
       ```python
       GCP_PROJECT_ID = <GCP_PROJECT_ID>
-      GCP_REGION = <GCP_REGION>
-      GCS_BUCKET = f"{GCP_PROJECT_ID}_data_lake"
-      GCS_BUCKET_PATH = "iowa_liquor"
-      
+      GCP_REGION = <GCP_REGION>    
       ```
 
-21. Create GCP resources (GCS bucket and BigQuery dataset) using Terraform.
-      - GCP_PROJECT_ID: [your GCP project ID](https://console.cloud.google.com/cloud-resource-manager).
-      - GCP_REGION: optional (default: europe-west6)
+22. Create GCP resources (GCS bucket and BigQuery dataset) using Terraform.
 
       ```bash
       cd ~/de-zoomcamp-project/terraform
       terraform init
       ```
 
+      - GCP_PROJECT_ID: [GCP project ID](https://console.cloud.google.com/cloud-resource-manager).
+      - GCP_REGION: GCP region (optional, default: europe-west6)
+
       ```bash
-      terraform plan -var="project=<GCP_PROJECT_ID>" -var="region=<GCP_REGION>"
+      terraform plan -var="project=<GCP_PROJECT_ID>" -var="region=<GCP_REGION>" -out=tfplan
       ```
 
       ```bash
-      terraform apply -var="project=<GCP_PROJECT_ID>" -var="region=<GCP_REGION>"
+      terraform apply tfplan
       ```
 
-22. Run Airflow in Docker.
+23. Run Airflow in Docker.
 
       ```bash
       cd ~/de-zoomcamp-project/airflow
       docker-compose up -d
       ```
 
-23. Open Airflow UI ```localhost:8080``` in your browser, start the **iowa_liquor_sales_dag** and wait until it finishes. It runs for about 30 min, because it downloads a ~6gb csv file. When it finishes you'll be able to build your own dashboard based on data from BigQuery dataset.
+24. Open Airflow UI ```localhost:8080``` in your browser, start the **iowa_liquor_sales_dag** and wait until it finishes. It runs for about 30 min, because it downloads a ~6gb csv file. When it finishes you'll be able to build your own dashboard based on data from BigQuery dataset.
+
+| :warning: WARNING                                                             |
+|:------------------------------------------------------------------------------|
+| Don't forget to ```terraform destroy``` (delete GCS bucket and BigQuery dataset) and to ```sudo shutdown``` (stop your VM) to save money on the account. |
