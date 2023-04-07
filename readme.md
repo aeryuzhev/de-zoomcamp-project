@@ -80,7 +80,7 @@
 
 10. Copy an External IP of this VM and create or update an existing ssh configuration file:
 
-    - HOST: the name of the host (you will use this name wnen connecting to the VM using ssh or sftp commands)
+    - REMOTE_HOST: the name of the remote host (you will use this name wnen connecting to the VM using ssh or sftp commands)
     - EXTERNAL_IP: external IP from GCP VM instances
     - KEY_FILENAME: the name for your SSH key file.
     - USERNAME: your username on the VM.
@@ -90,7 +90,7 @@
 
       echo \
       '
-      Host <HOST>
+      Host <REMOTE_HOST>
             HostName <EXTERNAL_IP>
             User <USERNAME>
             IdentityFile ~/.ssh/<KEY_FILENAME>
@@ -98,36 +98,34 @@
       ' >> ~/.ssh/config     
       ```
 
-11. Copy your GCP service account key file to the VM using sftp.
-      - HOST: the name of the host from ```~/.ssh/config```
-
       ```bash
-      sftp <HOST>
+      # Example of how ~/.ssh/config should be look like.
+      Host iowa-instance
+            HostName 34.65.66.223
+            User iowa
+            IdentityFile ~/.ssh/iowa
+            LocalForward 8080 localhost:8080 # Airflow UI
       ```
 
-      - GCP_SERVICE_ACCOUNT_KEY: a full path to a key file which you have downloaded and renamed to "google_credentials.json" wnen creating a GCP service account in section 6
+11. Copy your GCP service account key file to the remote machine using scp.
+      - REMOTE_HOST: the name of the remote host from ```~/.ssh/config```
+      - GCP_SERVICE_ACCOUNT_KEY: a full path to a key file which you have downloaded and renamed to "google_credentials.json" wnen creating a GCP service account in section 6. In my case it was saved to ```/home/aerik/downloads/google_credentials.json``` and the command should be ```scp -r ~/downloads/google_credentials.json iowa-instance:~/.google/credentials/google_credentials.json```.
 
       ```bash
-      put <GCP_SERVICE_ACCOUNT_KEY>
-      ```
-
-      ```bash
-      exit
+      ssh <REMOTE_HOST> 'mkdir -p ~/.google/credentials'
+      scp -r <GCP_SERVICE_ACCOUNT_KEY> <REMOTE_HOST>:~/.google/credentials/google_credentials.json
       ```
 
 12. Connect to the VM using ssh.
-      - HOST: the name of the host from ```~/.ssh/config```
+      - REMOTE_HOST: the name of the host from ```~/.ssh/config```
 
       ```bash
-      ssh <HOST>
+      ssh <REMOTE_HOST>
       ```
 
 13. Provide your service account credentials to Google Application Default Credentials.
 
       ```bash
-      mkdir -p ~/.google/credentials/
-      mv google_credentials.json ~/.google/credentials/
-
       echo 'export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/.google/credentials/google_credentials.json"' >> ~/.bashrc
       source ~/.bashrc
       gcloud auth application-default login 
@@ -168,7 +166,7 @@
 17. [Install docker-compose](https://github.com/docker/compose#where-to-get-docker-compose).
 
       ```bash
-      mkdir -p "~/.docker/cli-plugins" && cd "~/.docker/cli-plugins"
+      mkdir -p "${HOME}/.docker/cli-plugins" && cd "${HOME}/.docker/cli-plugins"
       wget https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-linux-x86_64 -O docker-compose
       chmod +x docker-compose
       echo 'export PATH="${PATH}:${HOME}/.docker/cli-plugins"' >> ~/.bashrc
@@ -187,7 +185,7 @@
       ```
 
       ```bash
-      ssh <HOST>
+      ssh <REMOTE_HOST>
       ```
 
       ```bash
@@ -197,21 +195,29 @@
 19. Clone the repo and add your user ID into the .env.
 
       ```bash
+      cd ~
       git clone https://github.com/aeryuzhev/de-zoomcamp-project.git
       cd de-zoomcamp-project/airflow
-      echo -e "AIRFLOW_UID=$(id -u)" >> .env
+      echo -e "AIRFLOW_UID=$(id -u)" > .env
       ```
 
-20. Open **.env** file and write [your GCP project ID](https://console.cloud.google.com/cloud-resource-manager) and GCP region (AIRFLOW_UID may be different).
+20. Open **~/de-zoomcamp-project/airflow/dags/config/gcp.py** file and write GCP_PROJECT_ID and GCP_REGION. [Here you can take your GCP project ID](https://console.cloud.google.com/cloud-resource-manager)
 
       ```bash
-      GCP_PROJECT_ID = <GCP_PROJECT_ID> # "iowa-project"
-      GCP_REGION = <GCP_REGION> # "europe-west6"
-      AIRFLOW_UID=1000
+      nano ~/de-zoomcamp-project/airflow/dags/config/gcp.py
+      ```
+
+      ```python
+      GCP_PROJECT_ID = <GCP_PROJECT_ID>
+      GCP_REGION = <GCP_REGION>
+      GCS_BUCKET = f"{GCP_PROJECT_ID}_data_lake"
+      GCS_BUCKET_PATH = "iowa_liquor"
+      
       ```
 
 21. Create GCP resources (GCS bucket and BigQuery dataset) using Terraform.
       - GCP_PROJECT_ID: [your GCP project ID](https://console.cloud.google.com/cloud-resource-manager).
+      - GCP_REGION: optional (default: europe-west6)
 
       ```bash
       cd ~/de-zoomcamp-project/terraform
@@ -219,11 +225,11 @@
       ```
 
       ```bash
-      terraform plan -var="project=<GCP_PROJECT_ID>"
+      terraform plan -var="project=<GCP_PROJECT_ID>" -var="region=<GCP_REGION>"
       ```
 
       ```bash
-      terraform apply -var="project=<GCP_PROJECT_ID>"
+      terraform apply -var="project=<GCP_PROJECT_ID>" -var="region=<GCP_REGION>"
       ```
 
 22. Run Airflow in Docker.
