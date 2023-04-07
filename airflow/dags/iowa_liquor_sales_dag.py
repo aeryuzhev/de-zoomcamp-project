@@ -19,7 +19,11 @@ from pyarrow import csv as pv
 from pyarrow import parquet as pq
 import pandas as pd
 
-from iowa_liquor_sales_dag_config import *
+from config.gcp import *
+from config.schemas import *
+from config.sql import *
+from config.dag import *
+
 
 def convert_csv_to_parquet(file_name, schema, timestamp_parsers):
     column_names = [field.name for field in schema]
@@ -30,7 +34,7 @@ def convert_csv_to_parquet(file_name, schema, timestamp_parsers):
         chunks = pv.open_csv(
             f"{file_name}.csv",
             read_options=pv.ReadOptions(
-                block_size=BLOCK_SIZE,
+                block_size=READ_BLOCK_SIZE,
                 column_names=column_names,
                 skip_rows=1,
             ),
