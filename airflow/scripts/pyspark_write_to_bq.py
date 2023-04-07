@@ -1,12 +1,15 @@
 import string
+import sys
 
 import pyspark
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.types import StringType
 
-GCS_TEMP_BUCKET = "dtc_data_lake_de-zoomcamp-375618" 
-GCS_IOWA_LIQUOR_FILE = f"gs://{GCS_TEMP_BUCKET}/iowa_liquor/fact_liquor_sale.parquet"
+GCP_PROJECT_ID = sys.argv[1]
+
+GCS_BUCKET = GCP_PROJECT_ID + "data_lake"
+GCS_IOWA_LIQUOR_FILE = f"gs://{GCS_BUCKET}/iowa_liquor/fact_liquor_sale.parquet"
 BQ_LIQUOR_SALE_TABLE = "iowa_liquor.fact_liquor_sale"
 
 map_county_dict = {
@@ -129,7 +132,7 @@ df_transformed = (
 df_transformed.write \
     .format("bigquery") \
     .mode("overwrite") \
-    .option("temporaryGcsBucket", GCS_TEMP_BUCKET) \
+    .option("temporaryGcsBucket", GCS_BUCKET) \
     .option("table", BQ_LIQUOR_SALE_TABLE) \
     .option("partitionField", "sale_date") \
     .option("partitionType", "MONTH") \

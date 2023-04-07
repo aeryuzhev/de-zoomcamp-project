@@ -2,6 +2,13 @@ import os
 
 import pyarrow as pa
 
+GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID")
+GCP_REGION = os.getenv("GCP_REGION")
+
+GCS_BUCKET = GCP_PROJECT_ID + "data_lake"
+GCS_BUCKET_PATH = "iowa_liquor"
+BQ_DATASET = "iowa_liquor"
+
 AIRFLOW_HOME = os.getenv("AIRFLOW_HOME")
 DATA_DIRECTORY = f"{AIRFLOW_HOME}/data"
 CODE_DIRECTORY = f"{AIRFLOW_HOME}/scripts"
@@ -18,12 +25,6 @@ BEGIN_SALES_YEAR = 2012
 END_SALES_YEAR = 2021
 
 BLOCK_SIZE = 64 * 1024 * 1024
-
-GCS_BUCKET = "dtc_data_lake_de-zoomcamp-375618"
-GCS_BUCKET_PATH = "iowa_liquor"
-BQ_DATASET = "iowa_liquor"
-GCP_REGION = "europe-west6"
-GCP_PROJECT_ID = "de-zoomcamp-375618"
 
 PYSPARK_URI = f"gs://{GCS_BUCKET}/{GCS_BUCKET_PATH}/scripts/pyspark_write_to_bq.py"
 DATAPROC_CLUSTER = "de-zoomcamp-cluster"
@@ -44,6 +45,7 @@ PYSPARK_JOB = {
     "placement": {"cluster_name": DATAPROC_CLUSTER},
     "pyspark_job": {
         "main_python_file_uri": PYSPARK_URI,
+        "args": [GCP_PROJECT_ID],
         "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"]
     },                          
 }
