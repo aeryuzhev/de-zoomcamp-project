@@ -94,6 +94,7 @@
             HostName <EXTERNAL_IP>
             User <USERNAME>
             IdentityFile ~/.ssh/<KEY_FILENAME>
+            LocalForward 8080 localhost:8080 # Airflow UI
       ' >> ~/.ssh/config     
       ```
 
@@ -114,11 +115,11 @@
       exit
       ```
 
-12. Connect to the VM using ssh (with 8080 port forwarding).
+12. Connect to the VM using ssh.
       - HOST: the name of the host from ```~/.ssh/config```
 
       ```bash
-      ssh -L 8080:localhost:8080 <HOST>
+      ssh <HOST>
       ```
 
 13. Provide your service account credentials to Google Application Default Credentials.
@@ -127,7 +128,7 @@
       mkdir -p ~/.google/credentials/
       mv google_credentials.json ~/.google/credentials/
 
-      echo 'export GOOGLE_APPLICATION_CREDENTIALS="~/.google/credentials/google_credentials.json"' >> ~/.bashrc
+      echo 'export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/.google/credentials/google_credentials.json"' >> ~/.bashrc
       source ~/.bashrc
       gcloud auth application-default login 
       ```
@@ -167,7 +168,7 @@
 17. [Install docker-compose](https://github.com/docker/compose#where-to-get-docker-compose).
 
       ```bash
-      mkdir -p "${HOME}/.docker/cli-plugins" && cd "${HOME}/.docker/cli-plugins"
+      mkdir -p "~/.docker/cli-plugins" && cd "~/.docker/cli-plugins"
       wget https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-linux-x86_64 -O docker-compose
       chmod +x docker-compose
       echo 'export PATH="${PATH}:${HOME}/.docker/cli-plugins"' >> ~/.bashrc
@@ -186,7 +187,7 @@
       ```
 
       ```bash
-      ssh -L 8080:localhost:8080 <HOST>
+      ssh <HOST>
       ```
 
       ```bash
@@ -202,8 +203,18 @@
       mkdir -p data plugins logs
       ```
 
-20. Run Airflow in Docker.
+20. Create GCP resources (GCS bucket and BigQuery dataset) using Terraform.
 
       ```bash
+      cd ~/de-zoomcamp-project/terraform
+      terraform apply
+      ```
+
+21. Run Airflow in Docker.
+
+      ```bash
+      cd ~/de-zoomcamp-project/airflow
       docker-compose up -d
       ```
+
+22. Open Airflow UI ```localhost:8080``` in your browser, start the **iowa_liquor_sales_dag** and wait until it finishes (~30 min). After that you can build your own dashboard based on the data in your BigQuery dataset.
