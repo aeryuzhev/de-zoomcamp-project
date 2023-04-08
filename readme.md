@@ -68,17 +68,17 @@
 
 10. [Create a GCP VM instance](https://console.cloud.google.com/compute/instancesAdd) with the following parameters.
 
-   - **Name**: Instance name.
-   - **Region**: europe-west6 (or choose another region)
-   - **Zone**: europe-west6-a (or choose another zone)
-   - **Machine configuration**:
-     - **Series**: E2
-     - **Machine type**: e2-standart-2 (2 vCPU, 8 GB memory)
-   - **Boot disk**:
-     - **Operating system**: Ubuntu
-     - **Version**: Ubuntu 18.04 LTS
-     - **Size** (GB): 20 GB
-   - **Service account**: Choose the service account which was created in section 5
+    - **Name**: Instance name.
+    - **Region**: europe-west6 (or choose another region)
+    - **Zone**: europe-west6-a (or choose another zone)
+    - **Machine configuration**:
+      - **Series**: E2
+      - **Machine type**: e2-standart-2 (2 vCPU, 8 GB memory)
+    - **Boot disk**:
+      - **Operating system**: Ubuntu
+      - **Version**: Ubuntu 18.04 LTS
+      - **Size** (GB): 20 GB
+    - **Service account**: Choose the service account which was created in section 5
 
 11. Copy an External IP of this VM and create or update an existing ssh configuration file ```~/.ssh/config```:
 
@@ -182,6 +182,8 @@
       sudo usermod -aG docker $USER
       ```
 
+20. Restart your VM, connect back and then restart the docker service.
+
       ```bash
       sudo reboot
       ```
@@ -194,7 +196,7 @@
       sudo service docker restart
       ```
 
-20. Clone the repo and add your user ID into the .env.
+21. Clone the repo and add your user ID into the .env.
 
       ```bash
       cd ~
@@ -203,7 +205,7 @@
       echo -e "AIRFLOW_UID=$(id -u)" > .env
       ```
 
-21. Open **~/de-zoomcamp-project/airflow/dags/config/dag.py** and write your GCP_PROJECT_ID and GCP_REGION. [Here you can take your GCP project ID](https://console.cloud.google.com/cloud-resource-manager)
+22. Open **~/de-zoomcamp-project/airflow/dags/config/dag.py** and write your GCP_PROJECT_ID and GCP_REGION. [Here you can take your GCP project ID](https://console.cloud.google.com/cloud-resource-manager)
 
       ```bash
       nano ~/de-zoomcamp-project/airflow/dags/config/dag.py
@@ -214,7 +216,7 @@
       GCP_REGION = <GCP_REGION>    
       ```
 
-22. Create GCP resources (GCS bucket and BigQuery dataset) using Terraform.
+23. Create GCP resources (GCS bucket and BigQuery dataset) using Terraform.
 
       ```bash
       cd ~/de-zoomcamp-project/terraform
@@ -232,14 +234,14 @@
       terraform apply tfplan
       ```
 
-23. Run Airflow in Docker.
+24. Run Airflow in Docker.
 
       ```bash
       cd ~/de-zoomcamp-project/airflow
       docker-compose up -d
       ```
 
-24. Open Airflow UI ```localhost:8080``` in your browser, start the **iowa_liquor_sales_dag** and wait until it finishes. It runs for about 30 min, because it downloads a ~6gb csv file. When it finishes you'll be able to build your own dashboard based on data from BigQuery dataset.
+25. Open Airflow UI ```localhost:8080``` in your browser, start the **iowa_liquor_sales_dag** and wait until it finishes. It will run for about 40 min, because it downloads a ~6gb csv file. When it finishes you'll be able to build your own dashboard based on data from BigQuery dataset.
 
 | :warning: WARNING                                                             |
 |:------------------------------------------------------------------------------|
