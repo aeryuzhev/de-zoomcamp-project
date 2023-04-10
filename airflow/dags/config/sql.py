@@ -25,8 +25,8 @@ create or replace table {BQ_DATASET}.dm_total_county_sale as
             p.avg_population,
             p.sum_population,
             p.fips,
-            round(sum(s.volume_sold_liters), 2) as total_sold_liters,
-            round(sum(s.sale_dollars), 2) as total_sale_dollars
+            round(sum(s.volume_sold_liters)) as total_sold_liters,
+            round(sum(s.sale_dollars)) as total_sale_dollars
         from
             {BQ_DATASET}.fact_liquor_sale s 
             join cte_avg_county_population p on s.county = p.county
