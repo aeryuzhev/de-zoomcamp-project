@@ -1,6 +1,10 @@
 # Data Engineering Zoomcamp Project
 
-## About
+## Introduction
+
+This project was built as a finalization of **[Data Engineering Zoomcamp Course](https://github.com/DataTalksClub/data-engineering-zoomcamp)**. I want to thank **Alexey Grigorev** and to all the **[datatalks.club](https://datatalks.club/) team**!
+
+The project is about liquor consumption in Iowa state. Why Iowa? When I looked for a theme for my project, I accidentally got on the [data.iowa.gov](https://data.iowa.gov/) and I was really surprised about its available datasets on different topics. And all of them were free to use. Unfortunately I couldn't find something similar about my country, so I decided to dive deep into the Iowa liquor lovers 8)
 
 ## Techologies
 
@@ -12,16 +16,24 @@
 - Google Dataproc
 - Docker
 - Terraform
-- Dbt
 - Looker Studio
+  
+## Data sources
+
+Datasets was taken from the [data.iowa.gov](https://data.iowa.gov/):
+
+- [Iowa Liquor Sales](https://data.iowa.gov/Sales-Distribution/Iowa-Liquor-Sales/m3tr-qhgy)
+- [County Population in Iowa by Year](https://data.iowa.gov/Community-Demographics/County-Population-in-Iowa-by-Year/qtnr-zsrc)
 
 ## Overview
 
+**Architecture diagram**
 ![Alt text](images/iowa_diagram.png)
 
+**Airflow DAG**
 ![Alt text](images/iowa_liquor_sales_dag.png)
 
-[Iowa Liquor Dashboard](https://lookerstudio.google.com/reporting/892c0980-dfa2-4958-8805-d969eda06ab3)
+**[Looker Dashboard](https://lookerstudio.google.com/reporting/892c0980-dfa2-4958-8805-d969eda06ab3)**
 
 ![Alt text](images/iowa_liquor_sales_dashboard.png)
 
