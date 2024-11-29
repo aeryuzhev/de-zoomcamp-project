@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project was built as a finalization of **[Data Engineering Zoomcamp Course](https://github.com/DataTalksClub/data-engineering-zoomcamp)**. I want to thank **Alexey Grigorev** and to all the **[datatalks.club](https://datatalks.club/) team**!
+This project was built as a finalization of **[Data Engineering Zoomcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp)**. I want to thank **Alexey Grigorev** and to all the **[datatalks.club](https://datatalks.club/) team**!
 
 The project is about liquor consumption in Iowa state. Why Iowa? When I looked for a theme for my project, I accidentally got on the [data.iowa.gov](https://data.iowa.gov/) and I was really surprised about its available datasets on different topics. And all of them were free to use. Unfortunately I couldn't find something similar about my country, so I decided to dive deep into the Iowa liquor lovers 8)
 
